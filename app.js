@@ -1,19 +1,42 @@
-// Our imported libraries
 const express = require('express');
-
-// Assigning Express to an app contstant
 const app = express();
+require('dotenv').config();
 
-//Set home path
-const path = requiure('path');
+const path = require('path');
 
-//views
+// Set our views directory
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
+
+app.use('/css', express.static('assets/css'));
+app.use('/javascript', express.static('assets/javascript'));
+app.use('/images', express.static('assets/images'));
+
+// Mongo access
+// const mongoose = require('mongoose');
+// mongoose.connect(process.env.DB_URI, {
+//   auth: {
+//     user: process.env.DB_USER,
+//     password: process.env.DB_PASS
+//   },
+//   useNewUrlParser: true,
+//   useUnifiedTopology: true
+// }).catch(err => console.error(`Error: ${err}`));
+
+app.get(`/`, (req, res) => { // res is the response object and req is the request object
+  // Our response
+  res.send(`Testing`);
+});
+
+
+//Implement Body Parser
+const bodyParser = require('body-parser');
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 // Our routes
 const routes = require('./routes.js');
 app.use('/', routes);
-
-// Starting our server on port 4000
-app.listen((process.env.PORT || 4000), () => console.log('Listening on 4000'));
+// Start our server
+const port = process.env.PORT;
+app.listen(process.env.PORT || 3000, port => console.log(`Listening on port ${port}`));

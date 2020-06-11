@@ -1,13 +1,7 @@
-//Router moudle
-const router = require('express').Router();
+const { home, about, thing } = require('../controllers/PagesController');
 
-//Controller
-const PagesController = require('../controllers/pagesController');
+module.exports = router => {
+  router.get('/', home);
 
-//Routes
-router.get(`/`, PagesController.show);
-router.get(`/about`, PagesController.show);
-router.get(`/contact`, PagesController.show);
-
-//export changes
-module.exports = router;
+  router.get('/about', about);
+};

@@ -1,8 +1,7 @@
 const router = require('express').Router();
 
-module.exports = () => {
-  // Import page routes
-  (require('./routes/pages'))(router);
+// Our resource routes
+(require('./routes/pages'))(router);
+(require('./routes/blogs'))(router);
 
-  return router;
-};
+module.exports = router;
