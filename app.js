@@ -6,7 +6,7 @@ const path = require('path');
 
 // Set our views directory
 app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'pug');
+app.set('view engine', 'ejs');
 
 app.use('/css', express.static('assets/css'));
 app.use('/javascript', express.static('assets/javascript'));
@@ -23,10 +23,7 @@ app.use('/images', express.static('assets/images'));
 //   useUnifiedTopology: true
 // }).catch(err => console.error(`Error: ${err}`));
 
-app.get(`/`, (req, res) => { // res is the response object and req is the request object
-  // Our response
-  res.send(`Testing`);
-});
+
 
 
 //Implement Body Parser
