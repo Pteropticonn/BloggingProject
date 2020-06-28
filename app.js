@@ -13,15 +13,15 @@ app.use('/javascript', express.static('assets/javascript'));
 app.use('/images', express.static('assets/images'));
 
 // Mongo access
-// const mongoose = require('mongoose');
-// mongoose.connect(process.env.DB_URI, {
-//   auth: {
-//     user: process.env.DB_USER,
-//     password: process.env.DB_PASS
-//   },
-//   useNewUrlParser: true,
-//   useUnifiedTopology: true
-// }).catch(err => console.error(`Error: ${err}`));
+const mongoose = require('mongoose');
+mongoose.connect(process.env.DB_URI, {
+  auth: {
+    user: process.env.DB_USER,
+    password: process.env.DB_PASS
+  },
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+}).catch(err => console.error(`Error: ${err}`));
 
 
 
@@ -29,7 +29,7 @@ app.use('/images', express.static('assets/images'));
 //Implement Body Parser
 const bodyParser = require('body-parser');
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({ extended: true })); //takes URL and splits it up into compontent parts for body parser
 
 // Our routes
 const routes = require('./routes.js');
