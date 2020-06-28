@@ -4,14 +4,6 @@ require('dotenv').config();
 
 const path = require('path');
 
-// Set our views directory
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'ejs');
-
-app.use('/css', express.static('assets/css'));
-app.use('/javascript', express.static('assets/javascript'));
-app.use('/images', express.static('assets/images'));
-
 // Mongo access
 const mongoose = require('mongoose');
 mongoose.connect(process.env.DB_URI, {
@@ -23,13 +15,53 @@ mongoose.connect(process.env.DB_URI, {
   useUnifiedTopology: true
 }).catch(err => console.error(`Error: ${err}`));
 
-
-
-
 //Implement Body Parser
 const bodyParser = require('body-parser');
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true })); //takes URL and splits it up into compontent parts for body parser
+
+// Setup our session
+const passport = require('passport');
+const session = require('express-session');
+app.use(session({
+  secret: 'the earth is flat',
+  resave: true,
+  saveUninitialized: false
+}));
+
+// Setting up Passport
+app.use(passport.initialize());
+app.use(passport.session());
+const User = require('./models/user');
+passport.use(User.createStrategy());
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
+
+// Set our views directory
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'ejs');
+
+app.use('/css', express.static('assets/css'));
+app.use('/javascript', express.static('assets/javascript'));
+app.use('/images', express.static('assets/images'));
+
+const flash = require('connect-flash');
+app.use(flash());
+app.use('/', (req, res, next) => {
+  // Setting default locals
+  res.locals.pageTitle = "Untitled";
+
+  // Passing along flash message
+  res.locals.flash = req.flash();
+  res.locals.formData = req.session.formData || {};
+  req.session.formData = {};
+
+  // Authentication helper
+  res.locals.authorized = req.isAuthenticated();
+  if (res.locals.authorized) res.locals.email = req.session.passport.user;
+
+  next();
+});
 
 // Our routes
 const routes = require('./routes.js');
