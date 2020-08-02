@@ -9,6 +9,7 @@ exports.new = (req, res) => {
 };
 
 exports.create = (req, res, next) => {
+  return res.status(200).json({...req.body, message: "Yoooo"});
   passport.authenticate('local', {
     successRedirect: '/blogs',
     successFlash: 'You were successfully logged in.',

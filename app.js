@@ -66,6 +66,18 @@ app.use('/', (req, res, next) => {
 // Our routes
 const routes = require('./routes.js');
 app.use('/', routes);
+
+app.get('/test', (req, res) => {
+  res.status(200).json({message: 'Hello World'})
+});
+
+const clientRoot = path.join(__dirname, '/client/build');
+app.use((req, res, next) =>{
+  if(req.method === "GET" && req.accepts('html') && !req.is('json') && !req.path.includes('.')){
+    res.sendFile('index.html', { clientRoot });
+  } else next();
+});
+
 // Start our server
-const port = process.env.PORT;
-app.listen(process.env.PORT || 3000, port => console.log(`Listening on port ${port}`));
+const port = process.env.PORT || 4000;
+app.listen(port, () => console.log(`Listening on port ${port}`));
